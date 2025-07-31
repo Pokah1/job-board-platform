@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Job Board Platform",
+  title: "Talentra",
   description:
     "A modern, responsive job board that helps graduates, freelancers, and career changers discover tailored job opportunities with advanced filters, easy applications, and a seamless user experience.",
 };

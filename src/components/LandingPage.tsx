@@ -42,7 +42,7 @@ const LandingPage = () => {
             >
               About
             </Link>
-            <Button variant="outline">Sign In</Button>
+            <Button variant="outline"><a href="/login">Sign In</a></Button>
             <Button variant="accent">Post a Job</Button>
           </div>
         </div>

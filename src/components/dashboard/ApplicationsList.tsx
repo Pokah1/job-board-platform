@@ -1,17 +1,11 @@
 "use client";
 
 import ApplicationCard from "./ApplicationCard";
+import { Job } from "@/types/jobs";
 
-export interface Application {
-  title: string;
-  company: string;
-  location: string;
-  status: "Pending" | "Accepted" | "Rejected";
-  salary?: string;
-  description?: string;
-}
 
-const ApplicationList =({ applications }: { applications: Application[] }) => {
+
+const ApplicationList =({ applications }: { applications: Job[] }) => {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {applications.map((job, idx) => (

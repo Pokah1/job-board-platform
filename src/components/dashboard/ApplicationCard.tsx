@@ -1,15 +1,7 @@
 "use client";
+import { Job } from "@/types/jobs";
 
-interface ApplicationCardProps {
-  title: string;
-  company: string;
-  location: string;
-  status: "Pending" | "Accepted" | "Rejected";
-  salary?: string;
-  description?: string;
-}
-
-const ApplicationCard = ({ title, company, location, status, salary, description }: ApplicationCardProps) => {
+const ApplicationCard = ({ title, company, location, status, salary, description }: Job) => {
   return (
     <div className="bg-gray-900 p-4 rounded-lg shadow hover:shadow-lg transition">
       <h3 className="text-lg font-semibold">{title}</h3>

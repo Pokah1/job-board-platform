@@ -4,14 +4,15 @@ import { useState } from "react";
 // import ProtectedRoute from "@/components/ProtectedRoute";
 import ApplicationHeader from "@/components/dashboard/DashboardHeader";
 import FilterPanel, { Filters } from "@/components/dashboard/FiltersPanel";
-import ApplicationList, { Application } from "@/components/dashboard/ApplicationsList";
+import ApplicationList from "@/components/dashboard/ApplicationsList";
+import { Job } from "@/types/jobs";
 
 const DashboardPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<Filters>({ category: "", location: "", experience: "" });
 
   // Mock job data
-  const [applications] = useState<Application[]>([
+  const [applications] = useState<Job[]>([
      { title: "Frontend Developer", company: "Google", location: "Remote", status: "Pending", salary: "$120k", description: "React, TypeScript" },
   { title: "UI Designer", company: "Figma", location: "San Francisco", status: "Accepted", salary: "$100k", description: "Figma, Adobe XD" },
   { title: "Backend Developer", company: "Amazon", location: "New York", status: "Rejected", salary: "$130k", description: "Node.js, AWS" },

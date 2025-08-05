@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import JobCard from "@/components/jobs/JobCard";
-import { Job } from "@/hooks/types/jobs";
+import { Job } from "../../../types/jobs";
 import api from "@/lib/api";
 
 export default function JobsPage() {

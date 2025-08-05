@@ -3,7 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import JobCard from "@/components/jobs/JobCard";
-import { Job } from "@/hooks/types/jobs";
+import { Job } from "../../../types/jobs";
+import api from "@/lib/api";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function FeaturedJobsPage() {
   const { token } = useAuth();
@@ -11,7 +14,7 @@ export default function FeaturedJobsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
+  // Filters from API docs
   const [filters, setFilters] = useState({
     salary_min: "",
     salary_max: "",
@@ -22,46 +25,42 @@ export default function FeaturedJobsPage() {
     category: "",
     search: "",
     ordering: "",
+    page: 1, // pagination support
   });
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const fetchJobs = useCallback(async () => {
-  if (!token) return;
+    if (!token) return;
 
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  try {
-    const queryParams = new URLSearchParams(
-      Object.fromEntries(
-        Object.entries(filters).filter(entry => entry[1])
-      )
-    );
+    try {
+      const queryParams = Object.fromEntries(
+        Object.entries(filters).filter(([, v]) => v !== "")
+      );
 
-    const res = await fetch(
-      `http://127.0.0.1:8000/api/jobs/featured/?${queryParams}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      const res = await api.get("/api/jobs/featured/", {
+        params: queryParams,
+      });
 
-    if (!res.ok) throw new Error("Failed to fetch featured jobs");
+      setJobs(res.data.results || []);
+    } catch (err) {
+      console.error("Failed to fetch featured jobs", err);
+      setError("Failed to load featured jobs");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, token]);
 
-    const data = await res.json();
-    setJobs(data.results || []);
-  } catch {
-    setError("Failed to load featured jobs");
-  } finally {
-    setLoading(false);
-  }
-}, [filters, token]); // ✅ Dependencies
-
-useEffect(() => {
-  fetchJobs();
-}, [fetchJobs]);
+  useEffect(() => {
+    fetchJobs();
+  }, [fetchJobs]);
 
   return (
     <main className="p-6 max-w-6xl mx-auto">
@@ -69,14 +68,14 @@ useEffect(() => {
 
       {/* Filters */}
       <div className="grid md:grid-cols-4 gap-4 mb-6 bg-gray-900 p-4 rounded-lg">
-        <input
+        <Input
           name="search"
           value={filters.search}
           onChange={handleFilterChange}
           placeholder="Search..."
           className="p-2 rounded bg-gray-800 text-white border border-gray-700"
         />
-        <input
+        <Input
           name="location"
           value={filters.location}
           onChange={handleFilterChange}
@@ -108,12 +107,12 @@ useEffect(() => {
           <option value="senior">Senior</option>
           <option value="executive">Executive</option>
         </select>
-        <button
+        <Button
           onClick={fetchJobs}
           className="md:col-span-4 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
         >
           Apply Filters
-        </button>
+        </Button>
       </div>
 
       {/* Results */}

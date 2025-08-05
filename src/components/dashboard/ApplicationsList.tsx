@@ -1,7 +1,7 @@
 "use client";
 
 import ApplicationCard from "./ApplicationCard";
-import { Application } from "@/hooks/types/applications";
+import { Application } from "../../../types/applications";
 
 
 interface Props {

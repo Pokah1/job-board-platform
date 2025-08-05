@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import ApplicationHeader from "@/components/dashboard/DashboardHeader";
 import FilterPanel, { Filters } from "@/components/dashboard/FiltersPanel";
 import ApplicationList from "@/components/dashboard/ApplicationsList";
-import { Application } from "@/hooks/types/applications";
+import { Application } from "../../../types/applications";
 import api from "@/lib/api";
 
 const DashboardPage = () => {

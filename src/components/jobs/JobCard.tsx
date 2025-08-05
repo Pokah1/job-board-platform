@@ -1,5 +1,5 @@
 "use client";
-import { Job } from "@/hooks/types/jobs";
+import { Job } from "../../../types/jobs";
 
 const JobCard = ({ id, title, company_name, location, salary_min, salary_max, description }: Job) => {
   return (

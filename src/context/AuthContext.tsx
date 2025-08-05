@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { RegistrationData } from "@/hooks/types/auth";
+import { RegistrationData } from "../../types/auth";
 import api from "@/lib/api";
 import { AxiosError } from "axios";
 

@@ -1,5 +1,5 @@
 "use client";
-import { Application } from "@/hooks/types/applications";
+import { Application } from "../../../types/applications";
 
 const ApplicationCard = ({ job, status, applied_at }: Application) => {
   return (

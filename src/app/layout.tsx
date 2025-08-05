@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
+import { ProfileProvider } from "@/context/ProfileContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +20,6 @@ export const metadata: Metadata = {
     "A modern, responsive job board that helps graduates, freelancers, and career changers discover tailored job opportunities with advanced filters, easy applications, and a seamless user experience.",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,9 +31,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {children}
+          <ProfileProvider>{children}</ProfileProvider>
         </AuthProvider>
-        
       </body>
     </html>
   );

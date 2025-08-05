@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Job } from "@/hooks/types/jobs";
+import { Job } from "../../../types/jobs";
 import JobCard from "./JobCard";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";

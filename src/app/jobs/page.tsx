@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import JobCard from "@/components/jobs/JobCard";
-import { Job } from "@/types/jobs";
+import { Job } from "@/hooks/types/jobs";
+import api from "@/lib/api";
 
 export default function JobsPage() {
   const { token } = useAuth();
@@ -13,19 +14,17 @@ export default function JobsPage() {
 
   useEffect(() => {
     if (!token) return;
-    fetch("http://127.0.0.1:8000/api/jobs/", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch jobs");
-        return res.json();
+   
+      setLoading(true);
+      setError(null);
+
+      api.get("api/jobs")
+      .then((res) => {
+         console.log("Jobs API response:", res.data);
+        setJobs(res.data.results || []);
       })
-      .then(data => {
-      console.log("Jobs API response:", data); // <-- Log response here
-      setJobs(data.results);
-    })
       .catch(() => setError("Failed to load jobs"))
-      .finally(() => setLoading(false));
+    .finally(() => setLoading(false));
   }, [token]);
 
   if (loading) return <p>Loading jobs...</p>;

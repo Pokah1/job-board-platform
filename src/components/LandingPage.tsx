@@ -1,19 +1,29 @@
+"use client"
+
+
+import dynamic from "next/dynamic";
+
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import {
-  Search,
-  MapPin,
-  Briefcase,
-  Users,
-  Globe,
-  TrendingUp,
+import { Search, MapPin, Briefcase, Users, Globe, TrendingUp,
 } from "lucide-react";
 import heroImage from "@/app/assets/Hero-Image.jpg";
 
+
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+
+
+const FeaturedJobs = dynamic(() => import("./jobs/FeaturedJobs"), {
+  loading: () => <p className="text-center py-10">Loading Jobs...</p>,ssr:false 
+})
 
 const LandingPage = () => {
+const [showFeatured, setShowFeatured] = useState(false);
+
+
   return (
     <div className="relative min-h-screen bg-background">
       {/* Navigation */}
@@ -86,9 +96,14 @@ const LandingPage = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="text-lg px-8 py-3">
+                <>
+                <Button size="lg" 
+                onClick={() => setShowFeatured(true)}
+                className="text-lg px-8 py-3">
                   Browse Jobs
                 </Button>
+                {showFeatured && <FeaturedJobs limit={6}/>}
+                </>
                 <Button
                   variant="accent"
                   size="lg"

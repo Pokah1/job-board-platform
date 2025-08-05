@@ -4,7 +4,7 @@ import { Job } from "../../../types/jobs";
 const JobCard = ({ id, title, company_name, location, salary_min, salary_max, description }: Job) => {
   return (
     <a href={`/jobs/${id}`}>
-      <div className="bg-gray-900 p-4 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
+      <div className="bg-background p-4 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="text-sm text-gray-400">{company_name}</p>
         <p className="text-sm text-gray-500">{location}</p>

@@ -77,6 +77,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setError(null);
       const res = await profileService.createProfile(data);
       await fetchMyProfile(); // Refresh my profile
+      await fetchProfiles(); // Refresh my profile
       return res.data;
     } catch (err) {
         console.error("Failed to create profile", err)
@@ -85,24 +86,35 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } finally {
       setLoading(false);
     }
-  }, [fetchMyProfile]);
+  }, [fetchMyProfile, fetchProfiles]);
 
-   /** Update profile */
-   const updateMyProfile = useCallback(async (data: UpdateProfilePayload) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await profileService.updateMyProfile(data);
-      setMyProfile(res.data);
-      return res.data;
-    } catch (err) {
-        console.error("Failed to update profile", err)
-      setError("Failed to update profile");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+   
+
+  /** Update profile */
+const updateMyProfile = useCallback(async (data: UpdateProfilePayload) => {
+  try {
+    setLoading(true);
+    setError(null);
+    const res = await profileService.updateMyProfile(data);
+    setMyProfile(res.data);
+
+    // Refresh profiles so list updates immediately
+    await fetchProfiles();
+
+    return res.data;
+  } catch (err) {
+    console.error("Failed to update profile", err);
+    setError("Failed to update profile");
+    return null;
+  } finally {
+    setLoading(false);
+  }
+}, [fetchProfiles]);
+
+
+
+
+
   /** Delete profile */
   const deleteProfile = useCallback(async (id: number) => {
     try {
@@ -110,6 +122,9 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setError(null);
       await profileService.deleteProfile(id);
       setProfiles(prev => prev.filter(profile => profile.id !== id));
+      if (myProfile?.id === id) {
+        setMyProfile(null) //this clear profile if its mine
+      }
       return true;
     } catch (err) {
         console.error("Failed to delete profile", err)
@@ -118,7 +133,9 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [myProfile]);
+
+
 
   return (
     <ProfileContext.Provider

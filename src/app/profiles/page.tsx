@@ -1,14 +1,27 @@
 "use client";
 
+import { useEffect } from "react";
+import { useProfile } from "@/context/ProfileContext";
+// import MyProfileCard from "@/components/profiles/MyProfileCard ";
 import ProfileList from "@/components/profiles/ProfileList";
 
 const ProfilesPage = () => {
-return (
-    <main className="p-6 max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Profiles</h1>
-        <ProfileList />
-    </main>
-)
-}
+  const { fetchProfiles, fetchMyProfile } = useProfile();
 
-export default ProfilesPage
+  useEffect(() => {
+    fetchMyProfile();
+    fetchProfiles();
+  }, [fetchMyProfile, fetchProfiles]);
+
+  return (
+    <main className="p-6 max-w-6xl mx-auto space-y-6">
+      <h1 className="text-3xl font-bold">Profiles</h1>
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">All Profiles</h2>
+        <ProfileList />
+      </section>
+    </main>
+  );
+};
+
+export default ProfilesPage;

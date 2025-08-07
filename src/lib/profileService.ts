@@ -18,7 +18,8 @@ export const profileService = {
      getMyProfile: () => api.get<Profile>("/account/profiles/my_profile/"),
 
   getProfileById: (id: number) =>
-    api.get<Profile>(`/account/profiles/${id}/`),
+  api.get<Profile>(`/account/profiles/${id}/`).then(res => res.data),
+
 
   getMyStats: () => api.get("/account/profiles/my_stats/"),
 

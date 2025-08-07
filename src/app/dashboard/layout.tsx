@@ -6,34 +6,36 @@ import { SidebarProvider, useSidebar } from "@/context/SidebarContext";
 import { Menu } from "lucide-react";
 import { ReactNode } from "react";
 
-function LayoutWrapper({children} : {children: React.ReactNode}) {
-    const { toggleSidebar } = useSidebar();
+function LayoutWrapper({ children }: { children: React.ReactNode }) {
+  const { toggleSidebar } = useSidebar();
 
-    return (
-        <div className="flex bg-background text-primary-foreground min-h-screen">
-            <Sidebar />
+  return (
+    <div className="flex min-h-screen bg-background text-primary-foreground">
+      {/* Sidebar */}
+      <div className="h-full">
+        <Sidebar />
+      </div>
 
-            {/* Main Content */}
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col p-6 overflow-y-auto">
+        {/* Mobile menu button */}
+        <Button
+          onClick={toggleSidebar}
+          className="lg:hidden mb-4 p-2 bg-gray-800 rounded-lg self-start"
+        >
+          <Menu size={24} />
+        </Button>
 
-            <main className="flex-1 p-6 overflow-y-auto">
-                {/* Mobile menu button */}
-                <Button 
-                onClick={toggleSidebar}
-                className="lg:hidden mb-4 p-2 bg-gray-800 rounded-lg"
-                >
-                    <Menu size={24}/>
-                </Button>
-                {children}
-
-            </main>
-        </div>
-    );
+        {children}
+      </main>
+    </div>
+  );
 }
 
-export default function DashboardLayout({children}: {children: ReactNode}) {
-    return (
-        <SidebarProvider>
-            <LayoutWrapper>{children}</LayoutWrapper>
-        </SidebarProvider>
-    );
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  return (
+    <SidebarProvider>
+      <LayoutWrapper>{children}</LayoutWrapper>
+    </SidebarProvider>
+  );
 }

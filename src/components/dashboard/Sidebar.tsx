@@ -29,8 +29,8 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static z-50 top-0 left-0 h-full w-64 bg-background border-r border-gray-800 transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+        className={`fixed lg:static z-50 top-0 left-0 h-screen lg:h-auto min-h-screen w-64 bg-background border-r border-gray-800 flex flex-col overflow-y-auto
+  transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
         <div className="flex justify-between items-center p-6">
           <div className="text-2xl font-bold text-brand">Talentra</div>

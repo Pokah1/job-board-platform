@@ -90,16 +90,16 @@ function profileReducer(state: ProfileState, action: ProfileAction): ProfileStat
     case 'UPDATE_PROFILE':
       return {
         ...state,
-        profiles: state.profiles.map(p => p.id === action.payload.id ? action.payload : p),
-        availableCandidates: state.availableCandidates.map(p => p.id === action.payload.id ? action.payload : p),
-        myProfile: state.myProfile?.id === action.payload.id ? action.payload : state.myProfile,
+        profiles: state.profiles.map(p => p.user.id === action.payload.user.id ? action.payload : p),
+        availableCandidates: state.availableCandidates.map(p => p.user.id === action.payload.user.id ? action.payload : p),
+        myProfile: state.myProfile?.user.id === action.payload.user.id ? action.payload : state.myProfile,
       };
     
     case 'DELETE_PROFILE':
       return {
         ...state,
-        profiles: state.profiles.filter(p => p.id !== action.payload),
-        availableCandidates: state.availableCandidates.filter(p => p.id !== action.payload),
+        profiles: state.profiles.filter(p => p.user.id !== action.payload),
+        availableCandidates: state.availableCandidates.filter(p => p.user.id !== action.payload),
       };
     
     case 'SET_FILTERS':

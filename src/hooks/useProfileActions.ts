@@ -89,35 +89,35 @@ export function useProfileActions() {
     }
   }, [dispatch]);
 
-  const uploadProfileImage = useCallback(async (id: number, file: File) => {
-    try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: null });
+  // const uploadProfileImage = useCallback(async (id: number, file: File) => {
+  //   try {
+  //     dispatch({ type: 'SET_LOADING', payload: true });
+  //     dispatch({ type: 'SET_ERROR', payload: null });
       
-      const profile = await profileService.uploadProfileImage(id, file);
-      dispatch({ type: 'UPDATE_PROFILE', payload: profile });
-      return profile;
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to upload profile image' });
-      console.error('Error uploading profile image:', error);
-      throw error;
-    }
-  }, [dispatch]);
+  //     const profile = await profileService.uploadProfileImage(id, file);
+  //     dispatch({ type: 'UPDATE_PROFILE', payload: profile });
+  //     return profile;
+  //   } catch (error) {
+  //     dispatch({ type: 'SET_ERROR', payload: 'Failed to upload profile image' });
+  //     console.error('Error uploading profile image:', error);
+  //     throw error;
+  //   }
+  // }, [dispatch]);
 
-  const uploadResume = useCallback(async (id: number, file: File) => {
-    try {
-      dispatch({ type: 'SET_LOADING', payload: true });
-      dispatch({ type: 'SET_ERROR', payload: null });
+  // const uploadResume = useCallback(async (id: number, file: File) => {
+  //   try {
+  //     dispatch({ type: 'SET_LOADING', payload: true });
+  //     dispatch({ type: 'SET_ERROR', payload: null });
       
-      const profile = await profileService.uploadResume(id, file);
-      dispatch({ type: 'UPDATE_PROFILE', payload: profile });
-      return profile;
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: 'Failed to upload resume' });
-      console.error('Error uploading resume:', error);
-      throw error;
-    }
-  }, [dispatch]);
+  //     const profile = await profileService.uploadResume(id, file);
+  //     dispatch({ type: 'UPDATE_PROFILE', payload: profile });
+  //     return profile;
+  //   } catch (error) {
+  //     dispatch({ type: 'SET_ERROR', payload: 'Failed to upload resume' });
+  //     console.error('Error uploading resume:', error);
+  //     throw error;
+  //   }
+  // }, [dispatch]);
 
   const deleteProfile = useCallback(async (id: number) => {
     try {
@@ -147,8 +147,8 @@ export function useProfileActions() {
     fetchMyProfile,
     createProfile,
     updateMyProfile,
-    uploadProfileImage,
-    uploadResume,
+    // uploadProfileImage,
+    // uploadResume,
     deleteProfile,
     setFilters,
     resetFilters,

@@ -1,8 +1,52 @@
-import ProfileDetail from "@/components/profiles/ProfileDetail";
+'use client'
 
+import React from 'react';
+import { ProfileDetail } from '@/components/profiles/ProfileDetail';
+import { Link } from 'lucide-react';
 
+interface ProfilePageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-export default function ProfilePa () {
+export default function ProfilePage({ params }: ProfilePageProps) {
+  // Alternative: Use React.use() if direct import doesn't work
+  const resolvedParams = React.use(params);
   
-  return <ProfileDetail  />;
+  console.log('ProfilePage params:', resolvedParams);
+  
+  const profileId = parseInt(resolvedParams.id);
+  
+  
+
+  if (!resolvedParams.id || resolvedParams.id === 'undefined') {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <div className="text-red-600 mb-4">Profile ID is undefined</div>
+        <p className="text-gray-600 mb-4">
+          The profile ID in the URL is missing or invalid.
+        </p>
+        <Link href="/profiles" className="text-blue-600 hover:text-blue-800">
+          Back to Profiles
+        </Link>
+      </div>
+    );
+  }
+
+  if (isNaN(profileId)) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <div className="text-red-600 mb-4">Invalid profile ID: {resolvedParams.id}</div>
+        <p className="text-gray-600 mb-4">
+          The profile ID must be a valid number.
+        </p>
+        <Link href="/profiles" className="text-blue-600 hover:text-blue-800">
+          Back to Profiles
+        </Link>
+      </div>
+    );
+  }
+
+  return <ProfileDetail profileId={profileId} />;
 }

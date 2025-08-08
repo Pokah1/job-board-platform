@@ -1,27 +1,30 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import { useProfile } from "@/context/ProfileContext";
-// import MyProfileCard from "@/components/profiles/MyProfileCard ";
-import ProfileList from "@/components/profiles/ProfileList";
+import { ProfileProvider } from '@/context/ProfileContext';
+import { ProfileList } from '@/components/profiles/ProfileList';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
-const ProfilesPage = () => {
-  const { fetchProfiles, fetchMyProfile } = useProfile();
-
-  useEffect(() => {
-    fetchMyProfile();
-    fetchProfiles();
-  }, [fetchMyProfile, fetchProfiles]);
-
+export default function ProfilesPage() {
   return (
-    <main className="p-6 max-w-6xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">Profiles</h1>
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">All Profiles</h2>
-        <ProfileList />
-      </section>
-    </main>
+    <ProfileProvider>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground">All Profiles</h1>
+          <p className="mt-2 text-foreground">
+            Browse through all registered profiles on our platform
+          </p>
+          <Button>
+          <Link href="/profiles/candidates">
+           Candidates for Hire
+          </Link>
+         
+          </Button>
+        </div>
+        
+        <ProfileList type="all" showActions={true} />
+      </div>
+    </ProfileProvider>
   );
-};
+}
 
-export default ProfilesPage;

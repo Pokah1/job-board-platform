@@ -3,7 +3,7 @@
 import { useSidebar } from "@/context/SidebarContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Briefcase, FileText, MessageSquare, Settings, HelpCircle, X} from "lucide-react";
+import { Home, Briefcase, FileText, MessageSquare, Settings, HelpCircle, X, User} from "lucide-react";
 
 interface SidebarLinkProps {
   href: string;
@@ -43,6 +43,7 @@ export default function Sidebar() {
         <nav className="space-y-2 px-4">
           <SidebarLink href="/dashboard" icon={<Home size={18} />} label="Home" activePath={pathname} />
           <SidebarLink href="/jobs" icon={<Briefcase size={18} />} label="Jobs" activePath={pathname} />
+          <SidebarLink href="/profiles" icon={<User size={18} />} label="Profiles" activePath={pathname} />
           <SidebarLink href="/applications" icon={<FileText size={18} />} label="My Applications" activePath={pathname} />
           <SidebarLink href="/messages" icon={<MessageSquare size={18} />} label="Messages" badge={3} activePath={pathname} />
           <SidebarLink href="/documents" icon={<FileText size={18} />} label="Documents" activePath={pathname} />

@@ -1,91 +1,130 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import api from "@/lib/api";
-import { Filters } from "../../../types/filter";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { useState, useEffect } from "react"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { useJobs } from "@/context/JobsContext"
+import { EXPERIENCE_LEVELS } from "@/lib/job-utils"
+import type { Filters } from "../../../types/filter"
+import type { Category } from "../../../types/jobs"
 
+interface JobFilterPanelProps {
+  onClose?: () => void
+}
 
+export default function JobFilterPanel({ onClose }: JobFilterPanelProps) {
+  const { categories, filters, applyFilters, clearFilters, totalCount } = useJobs()
+  const [localFilters, setLocalFilters] = useState<Filters>(filters)
 
-const JobFilterPanel = ({onApplyFilters} : {onApplyFilters: (filters:Filters) => void}) => {
-     const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [experience, setExperience] = useState("");
-  const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
+  useEffect(() => setLocalFilters(filters), [filters])
 
+  const hasActiveFilters = Object.values(localFilters).some((v) => v && v.length > 0)
+  const activeCount = Object.values(localFilters).filter((v) => v && v.length > 0).length
 
-   // Fetch categories dynamically
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await api.get("api/categories/");
-        setCategories(data.results || []);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const handleApply = () => {
+    applyFilters(localFilters)
+    onClose?.()
+  }
 
-  const applyFilters = () => {
-    onApplyFilters({category, location, experience});
-  };
+  const handleClear = () => {
+    setLocalFilters({})
+    clearFilters()
+  }
 
   return (
-    <div className="bg-gray-900 p-4 rounded-lg space-y-4">
-      {/* Category */}
-      <div>
-        <label className="block text-sm text-gray-400">Category</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white"
-        >
-          <option value="">All</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+    <div className="bg-white border rounded-lg shadow-sm p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center border-b pb-4">
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-semibold">🔍 Filter Jobs</h3>
+          {hasActiveFilters && (
+            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{activeCount} active</span>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {hasActiveFilters && (
+            <button onClick={handleClear} className="text-gray-500 hover:text-gray-700 text-sm underline">
+              Clear All
+            </button>
+          )}
+          {onClose && (
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+              ✕
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Location */}
-      <div>
-        <label className="block text-sm text-gray-400">Location</label>
-        <Input
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g. Remote"
-          className="w-full p-2 rounded bg-gray-800 text-white"
-        />
+      {/* Filters */}
+      <div className="space-y-4">
+        {/* Search */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+          <Input
+            placeholder="Job title, company..."
+            value={localFilters.search || ""}
+            onChange={(e) => setLocalFilters({ ...localFilters, search: e.target.value })}
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+          <select
+            value={localFilters.category || ""}
+            onChange={(e) => setLocalFilters({ ...localFilters, category: e.target.value || undefined })}
+            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Categories</option>
+            {categories &&
+              categories.map((cat: Category) => (
+                <option key={cat.id} value={cat.id.toString()}>
+                  {cat.name} ({cat.job_count})
+                </option>
+              ))}
+          </select>
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+          <Input
+            placeholder="City, country, or Remote"
+            value={localFilters.location || ""}
+            onChange={(e) => setLocalFilters({ ...localFilters, location: e.target.value })}
+          />
+        </div>
+
+        {/* Experience */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Experience Level</label>
+          <select
+            value={localFilters.experience || ""}
+            onChange={(e) => setLocalFilters({ ...localFilters, experience: e.target.value || undefined })}
+            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All Levels</option>
+            {EXPERIENCE_LEVELS &&
+              EXPERIENCE_LEVELS.map((level) => (
+                <option key={level.value} value={level.value}>
+                  {level.label}
+                </option>
+              ))}
+          </select>
+        </div>
       </div>
 
-      {/* Experience */}
-      <div>
-        <label className="block text-sm text-gray-400">Experience Level</label>
-        <select
-          value={experience}
-          onChange={(e) => setExperience(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white"
-        >
-          <option value="">All</option>
-          <option value="entry">Entry Level</option>
-          <option value="mid">Mid Level</option>
-          <option value="senior">Senior Level</option>
-        </select>
+      {/* Actions */}
+      <div className="space-y-3 pt-4 border-t">
+        <Button onClick={handleApply} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+          Apply Filters {totalCount > 0 && `(${totalCount})`}
+        </Button>
+        {hasActiveFilters && (
+          <Button onClick={handleClear} className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700">
+            Clear All
+          </Button>
+        )}
       </div>
-
-      {/* Apply Button */}
-      <Button
-        onClick={applyFilters}
-        className="w-full bg-blue-500 py-2 rounded-lg hover:bg-blue-600"
-      >
-        Apply Filters
-      </Button>
     </div>
   )
 }
-
-export default JobFilterPanel

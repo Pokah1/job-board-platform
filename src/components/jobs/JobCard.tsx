@@ -1,25 +1,45 @@
-"use client";
-import { Job } from "../../../types/jobs";
+"use client"
 
-const JobCard = ({ id, title, company_name, location, salary_min, salary_max, description }: Job) => {
+import type { Job } from "../../../types/jobs"
+import { formatSalary, getExperienceLabel, getEmploymentTypeStyle } from "@/lib/job-utils"
+
+export default function JobCard(job: Job) {
   return (
-    <a href={`/jobs/${id}`}>
-      <div className="bg-background p-4 rounded-lg shadow hover:shadow-lg transition cursor-pointer">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-sm text-gray-400">{company_name}</p>
-        <p className="text-sm text-gray-500">{location}</p>
-        {(salary_min || salary_max) && (
-          <p className="text-sm text-gray-500">
-            {salary_min && `$${salary_min}`} - {salary_max && `$${salary_max}`}
-          </p>
-        )}
-        {description && <p className="text-sm text-gray-500 line-clamp-2">{description}</p>}
-        <span className="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-blue-500/20 text-blue-400">
-          View Details
+    <div className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-1 p-6">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex-1">
+          <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">{job.title}</h3>
+          <p className="text-gray-600 mt-1">🏢 {job.company_name}</p>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getEmploymentTypeStyle(job.employment_type)}`}>
+          {job.employment_type}
         </span>
       </div>
-    </a>
-  );
-};
 
-export default JobCard;
+      {/* Details */}
+      <div className="space-y-2 mb-4 text-sm text-gray-600">
+        <p>📍 {job.location}</p>
+        <p>
+          💼 {job.category.name} • {getExperienceLabel(job.experience_level)}
+        </p>
+        {job.salary_min && job.salary_max && (
+          <p className="text-green-600 font-medium">💰 {formatSalary(job.salary_min, job.salary_max)}</p>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-between items-center pt-4 border-t text-xs text-gray-500">
+        <div className="flex gap-4">
+          <span>📅 {job.days_posted} days ago</span>
+          <span>👥 {job.application_count} applicants</span>
+        </div>
+        <a href={`/jobs/${job.id}`}>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm transition-colors">
+            View Details
+          </button>
+        </a>
+      </div>
+    </div>
+  )
+}

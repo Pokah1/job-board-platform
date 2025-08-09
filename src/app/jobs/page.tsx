@@ -1,92 +1,148 @@
-"use client";
+"use client"
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import JobCard from "@/components/jobs/JobCard";
-import JobHeader from "@/components/jobs/JobHeader";
-import { Job } from "../../../types/jobs";
-import JobFilterPanel from "@/components/jobs/JobFilterPanel";
-import { Filters } from "../../../types/filter";
-import api from "@/lib/api";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
+import { JobsProvider, useJobs } from "@/context/JobsContext"
+import JobCard from "@/components/jobs/JobCard"
+import JobHeader from "@/components/jobs/JobHeader"
+import JobFilterPanel from "@/components/jobs/JobFilterPanel"
+import { Button } from "@/components/ui/button"
 
-export default function JobsPage() {
-  const { token } = useAuth();
-  const router = useRouter();
+// This component uses the JobsContext, so it must be inside JobsProvider
+function JobsContent() {
+  const { jobs, loading, error, currentPage, hasNextPage, hasPreviousPage, fetchJobs } = useJobs()
+  const [showFilters, setShowFilters] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Redirect if not logged in (wait for token to be loaded)
+  // Fix hydration by ensuring client-side only rendering
   useEffect(() => {
-    if (token === undefined) return; // still loading, do nothing
-    if (token === null) router.push("/login"); // no token, redirect to login
-  }, [token, router]);
+    setMounted(true)
+  }, [])
 
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
-
-  const fetchJobs = useCallback(
-    async (filters?: Filters) => {
-      if (!token) return; // do not fetch if no token
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        const params: Record<string, string> = {};
-        if (filters?.category) params.category = filters.category;
-        if (filters?.location) params.location = filters.location;
-        if (filters?.experience) params.experience_level = filters.experience;
-
-        const res = await api.get("api/jobs", { params });
-        setJobs(res.data.results || []);
-      } catch {
-        setError("Failed to load jobs");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [token]
-  );
-
-  useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
-
-  const handleApplyFilters = (filters: Filters) => {
-    fetchJobs(filters);
-    setShowFilters(false);
-  };
-
-  // While loading auth token
-  if (token === undefined) {
-    return <p>Loading authentication status...</p>;
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin text-4xl mb-4">⏳</div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
-  // Authenticated but jobs loading
-  if (loading) return <p>Loading jobs...</p>;
-
-  // Error loading jobs
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 text-lg mb-4">{error}</p>
+          <Button onClick={() => fetchJobs(1)}>Try Again</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="p-6">
-      {/* Header with filter button */}
-      <JobHeader onToggleFilter={() => setShowFilters(!showFilters)} />
+    <div className="min-h-screen bg-foreground">
+      <JobHeader onToggleFilter={() => setShowFilters(!showFilters)} showFilters={showFilters} />
 
-      {/* Filters panel */}
-      {showFilters && (
-        <div className="mb-6">
-          <JobFilterPanel onApplyFilters={handleApplyFilters} />
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex gap-6">
+          {/* Filters */}
+          {showFilters && (
+            <div className="w-80 flex-shrink-0">
+              <div className="sticky top-24">
+                <JobFilterPanel onClose={() => setShowFilters(false)} />
+              </div>
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="flex-1">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin text-4xl mb-4">⏳</div>
+                <p className="text-gray-600">Loading jobs...</p>
+              </div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold mb-2">No jobs found</h3>
+                <p className="text-gray-600 mb-4">Try adjusting your filters.</p>
+                <Button onClick={() => setShowFilters(true)}>Adjust Filters</Button>
+              </div>
+            ) : (
+              <>
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {jobs.map((job) => (
+                    <JobCard key={job.id} {...job} />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {(hasNextPage || hasPreviousPage) && (
+                  <div className="flex justify-center gap-4 mt-8 pt-8 border-t">
+                    <Button
+                      onClick={() => fetchJobs(currentPage - 1)}
+                      disabled={!hasPreviousPage}
+                      className="bg-white border text-gray-700"
+                    >
+                      ← Previous
+                    </Button>
+                    <span className="px-4 py-2 text-gray-600">Page {currentPage}</span>
+                    <Button
+                      onClick={() => fetchJobs(currentPage + 1)}
+                      disabled={!hasNextPage}
+                      className="bg-white border text-gray-700"
+                    >
+                      Next →
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
-      )}
-
-      {/* Jobs grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {jobs.map((job) => (
-          <JobCard key={job.id} {...job} />
-        ))}
       </div>
     </div>
-  );
+  )
+}
+
+// This is the main page component that handles auth and provides context
+export default function JobsPage() {
+  const { token } = useAuth()
+  const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    if (token === undefined) return // Still loading
+    if (token === null) router.push("/login") // No token, redirect
+  }, [token, router, mounted])
+
+  // Show loading while mounting or checking auth
+  if (!mounted || token === undefined) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin text-4xl mb-4">⏳</div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // If no token, don't render anything (redirect will happen)
+  if (token === null) return null
+
+  // Wrap the content with JobsProvider
+  return (
+    <JobsProvider>
+      <JobsContent />
+    </JobsProvider>
+  )
 }

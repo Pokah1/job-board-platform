@@ -8,15 +8,17 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { LoginFormData } from "../../../types/auth";
 
+
 const LoginPage = () => {
   const { login } = useAuth();
   const router = useRouter();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
-    password: "",
-    rememberMe: false, 
-  });
+  username: "",
+  password: "",
+  rememberMe: false,
+});
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -30,7 +32,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      await login(formData); // Pass the whole object
+      await login(formData); 
       router.push("/dashboard");
     } catch (err) {
       console.error("Invalid credentials:", err);

@@ -1,16 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { RegistrationData } from "../../types/auth";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { RegistrationData, LoginFormData, User } from "../../types/auth";
 import api from "@/lib/api";
 import { AxiosError } from "axios";
-
-interface User {
-  id: number;
-  username: string;
-  full_name?: string | null;
-  email?: string | null;
-}
 
 interface LoginResponse {
   access: string;
@@ -23,28 +16,34 @@ interface LoginResponse {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (username: string, password: string, rememberMe?: boolean) => Promise<void>;
+  login: (data: LoginFormData) => Promise<void>;
   register: (data: RegistrationData) => Promise<void>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+function getInitialToken(): string | null {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("token");
+  }
+  return null;
+}
 
-  // ✅ Load saved token/user on mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+function getInitialUser(): User | null {
+  if (typeof window !== "undefined") {
     const storedUser = localStorage.getItem("user");
+    if (storedUser) return JSON.parse(storedUser) as User;
+  }
+  return null;
+}
 
-    if (storedToken) setToken(storedToken);
-    if (storedUser) setUser(JSON.parse(storedUser) as User);
-  }, []);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [token, setToken] = useState<string | null>(getInitialToken());
+  const [user, setUser] = useState<User | null>(getInitialUser());
 
-  // ✅ Login - calls your /auth/login/ endpoint
-  const login = async (username: string, password: string, rememberMe = false) => {
+  // Login function
+  const login = async ({ username, password, rememberMe }: LoginFormData) => {
     try {
       const res = await api.post<LoginResponse>("/auth/login/", {
         username,
@@ -54,18 +53,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const data = res.data;
 
-      // Save token & user
+      // Save token & user in localStorage
       localStorage.setItem("token", data.access);
       if (data.refresh) {
         localStorage.setItem("refresh", data.refresh);
       }
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      // Update state
       setToken(data.access);
       setUser(data.user);
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
-        console.error("Login failed:", error.response.data);
         throw new Error(
           (error.response.data as { error?: string }).error || "Login failed"
         );
@@ -74,10 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // ✅ Register
+  // Register function
   const register = async (formData: RegistrationData): Promise<void> => {
     try {
-      const res = await api.post<{ message?: string; error?: string }>(
+      const res = await api.post<{ message?: string; error?: string; [key: string]: unknown }>(
         "/auth/register/",
         formData
       );
@@ -87,23 +86,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
-        console.error("Registration failed:", error.response.data);
-        throw new Error(
-          (error.response.data as { error?: string }).error ||
-            "Registration failed"
-        );
+        const data = error.response.data as Record<string, string[] | string>;
+
+        let message = "Registration failed";
+        for (const value of Object.values(data)) {
+          if (Array.isArray(value) && value.length > 0) {
+            message = value[0];
+            break;
+          }
+          if (typeof value === "string" && value.trim()) {
+            message = value;
+            break;
+          }
+        }
+
+        throw new Error(message);
       }
       throw error;
     }
   };
 
-  // ✅ Logout
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
+  // Logout function
+  const logout = async (): Promise<void> => {
+    try {
+      if (token) {
+        try {
+          await api.post("/auth/logout/");
+          // Removed logging here
+        } catch {
+          // Removed logging here
+        }
+      }
+    } catch {
+      // Removed logging here
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("user");
+      setToken(null);
+      setUser(null);
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
+    }
   };
 
   return (
@@ -113,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook
+// Hook to use auth context
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

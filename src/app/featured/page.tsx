@@ -28,36 +28,48 @@ export default function FeaturedJobsPage() {
     page: 1, // pagination support
   });
 
-  const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFilters((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  
 
-  const fetchJobs = useCallback(async () => {
-    if (!token) return;
+const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  console.log(`Filter changed: ${e.target.name} = ${e.target.value}`);
+  setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  console.log("Filters after change:", { ...filters, [e.target.name]: e.target.value });
+};
 
-    setLoading(true);
-    setError(null);
 
-    try {
-      const queryParams = Object.fromEntries(
-        Object.entries(filters).filter(([, v]) => v !== "")
-      );
 
-      const res = await api.get("/api/jobs/featured/", {
-        params: queryParams,
-      });
+ const fetchJobs = useCallback(async () => {
+  if (!token) return;
 
-      setJobs(res.data.results || []);
-    } catch (err) {
-      console.error("Failed to fetch featured jobs", err);
-      setError("Failed to load featured jobs");
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, token]);
+  
+  setLoading(true);
+  setError(null);
+  
 
+
+  
+  try {
+    const queryParams = Object.fromEntries(
+      Object.entries(filters).filter(([, v]) => v !== "")
+    );
+    console.log("Query params sent:", queryParams);
+
+
+    const res = await api.get("/api/jobs/featured/", {
+      params: queryParams,
+    });
+
+    console.log("Filters sent:", queryParams);
+    console.log("API response data:", res.data);
+
+    setJobs(res.data); // <-- update here
+  } catch (err) {
+    console.error("Failed to fetch featured jobs", err);
+    setError("Failed to load featured jobs");
+  } finally {
+    setLoading(false);
+  }
+}, [filters, token]);
   useEffect(() => {
     fetchJobs();
   }, [fetchJobs]);

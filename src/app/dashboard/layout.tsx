@@ -2,12 +2,24 @@
 
 import Sidebar from "@/components/dashboard/Sidebar";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { SidebarProvider, useSidebar } from "@/context/SidebarContext";
 import { Menu } from "lucide-react";
-import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const { toggleSidebar } = useSidebar();
+
+   const { token } = useAuth();
+    const router = useRouter();
+  
+    useEffect(() => {
+      if (token === undefined) return; // loading
+      if (token === null) router.push("/login"); // redirect no token
+    }, [token, router]);
+  
+    if (token === undefined) return <p>Loading authentication status...</p>;
 
   return (
     <div className="flex min-h-screen bg-background text-primary-foreground">

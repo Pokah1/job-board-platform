@@ -1,8 +1,10 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ProfileDetail } from '@/components/profiles/ProfileDetail';
 import { Link } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface ProfilePageProps {
   params: Promise<{
@@ -11,7 +13,17 @@ interface ProfilePageProps {
 }
 
 export default function ProfilePage({ params }: ProfilePageProps) {
-  // Alternative: Use React.use() if direct import doesn't work
+   const { token } = useAuth();
+    const router = useRouter();
+  
+    useEffect(() => {
+      if (token === undefined) return; // loading
+      if (token === null) router.push("/login"); // redirect no token
+    }, [token, router]);
+  
+    if (token === undefined) return <p>Loading authentication status...</p>;
+
+
   const resolvedParams = React.use(params);
   
   console.log('ProfilePage params:', resolvedParams);

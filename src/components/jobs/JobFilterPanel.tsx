@@ -7,6 +7,7 @@ import { useJobs } from "@/context/JobsContext"
 import { EXPERIENCE_LEVELS } from "@/lib/job-utils"
 import type { Filters } from "../../../types/filter"
 import type { Category } from "../../../types/jobs"
+import { Search, X } from "lucide-react"
 
 interface JobFilterPanelProps {
   onClose?: () => void
@@ -36,7 +37,8 @@ export default function JobFilterPanel({ onClose }: JobFilterPanelProps) {
       {/* Header */}
       <div className="flex justify-between items-center border-b pb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">🔍 Filter Jobs</h3>
+          <Search className="w-5 h-5 text-gray-600" />
+          <h3 className="text-lg font-semibold">Filter Jobs</h3>
           {hasActiveFilters && (
             <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{activeCount} active</span>
           )}
@@ -49,7 +51,7 @@ export default function JobFilterPanel({ onClose }: JobFilterPanelProps) {
           )}
           {onClose && (
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-              ✕
+              <X className="w-5 h-5" />
             </button>
           )}
         </div>
@@ -73,9 +75,9 @@ export default function JobFilterPanel({ onClose }: JobFilterPanelProps) {
           <select
             value={localFilters.category || ""}
             onChange={(e) => setLocalFilters({ ...localFilters, category: e.target.value || undefined })}
-            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 bg-background text-foreground"
           >
-            <option value="">All Categories</option>
+            <option value="" className="text-background">All Categories</option>
             {categories &&
               categories.map((cat: Category) => (
                 <option key={cat.id} value={cat.id.toString()}>
@@ -101,7 +103,7 @@ export default function JobFilterPanel({ onClose }: JobFilterPanelProps) {
           <select
             value={localFilters.experience || ""}
             onChange={(e) => setLocalFilters({ ...localFilters, experience: e.target.value || undefined })}
-            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 bg-background text-foreground"
           >
             <option value="">All Levels</option>
             {EXPERIENCE_LEVELS &&

@@ -24,8 +24,8 @@ function JobsContent() {
     return (
       <div className="min-h-screen bg-foreground flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin text-4xl mb-4">⏳</div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading ...</p>
         </div>
       </div>
     )
@@ -43,7 +43,7 @@ function JobsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-foreground">
+    <div className="min-h-screen bg-background">
       <JobHeader onToggleFilter={() => setShowFilters(!showFilters)} showFilters={showFilters} />
 
       <div className="container mx-auto px-4 py-6">
@@ -61,8 +61,8 @@ function JobsContent() {
           <div className="flex-1">
             {loading ? (
               <div className="text-center py-12">
-                <div className="animate-spin text-4xl mb-4">⏳</div>
-                <p className="text-gray-600">Loading jobs...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading ...</p>
               </div>
             ) : jobs.length === 0 ? (
               <div className="text-center py-12">

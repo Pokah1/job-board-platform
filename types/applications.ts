@@ -1,11 +1,12 @@
-import { Job } from "./jobs";
+export interface JobApplication {
+  job_id: number
+  cover_letter: string
+}
 
-export interface Application {
-  id: number;
-  job: Job;
-  applicant_username: string;
-  applicant_email: string;
-  status: "pending" | "reviewed" | "shortlisted" | "rejected" | "hired";
-  applied_at: string;
-  updated_at: string;
+export interface ApplicationResponse {
+  id: number
+  job_id: number
+  cover_letter: string
+  status: string
+  created_at: string
 }

@@ -5,7 +5,7 @@ import {
   CategoryStats,
   FeaturedJob,
   JobStats  
- } from "../../types/dashboard";
+ } from "../types/dashboard";
 
 export const dashboardService = {
   // Get available candidates

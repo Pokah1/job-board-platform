@@ -1,5 +1,5 @@
 // components/dashboard/CategoryStatsList.tsx
-import type { CategoryStats } from "../../../types/dashboard";
+import type { CategoryStats } from "../../types/dashboard";
 
 interface CategoryStatsListProps {
   categories: CategoryStats[];

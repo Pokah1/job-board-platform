@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import api from "@/lib/api"
-import type { Job, Category } from "../../types/jobs"
-import type { Filters, JobsContextType } from "../../types/filter"
+import type { Job, Category } from "../types/jobs"
+import type { Filters, JobsContextType } from "../types/filter"
 
 const JobsContext = createContext<JobsContextType | undefined>(undefined)
 

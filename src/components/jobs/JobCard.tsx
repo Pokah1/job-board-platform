@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import type { Job } from "../../../types/jobs"
+import type { Job } from "../../types/jobs"
 import { formatSalary, getExperienceLabel, getEmploymentTypeStyle } from "@/lib/job-utils"
 import { Building, MapPin, Briefcase, DollarSign, Calendar, Users } from "lucide-react"
 

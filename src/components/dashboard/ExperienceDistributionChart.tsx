@@ -1,7 +1,7 @@
 // components/dashboard/ExperienceDistributionChart.tsx
 "use client";
 
-import type { ProfileStats } from "../../../types/dashboard";
+import type { ProfileStats } from "../../types/dashboard";
 
 interface ExperienceDistributionChartProps {
   data: ProfileStats["experience_level_distribution"];

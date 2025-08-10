@@ -14,7 +14,7 @@ import {
   CategoryStats, 
   FeaturedJob, 
   JobStats 
-} from '../../../types/dashboard';
+} from '../../types/dashboard';
 
 interface DashboardData {
   availableCandidates: CandidateProfile[];

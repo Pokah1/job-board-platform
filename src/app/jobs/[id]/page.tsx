@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import api from "@/lib/api"
-import type { Job } from "../../../../types/jobs"
+import type { Job } from "../../../types/jobs"
 import { formatSalary, getExperienceLabel, getEmploymentTypeStyle } from "@/lib/job-utils"
 import JobApplicationModal from "@/components/jobs/JobApplication"
 // Import lucide-react icons

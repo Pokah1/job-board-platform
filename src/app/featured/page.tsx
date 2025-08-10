@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import JobCard from "@/components/jobs/JobCard";
-import { Job } from "../../../types/jobs";
+import { Job } from "../../types/jobs";
 import api from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

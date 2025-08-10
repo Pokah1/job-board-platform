@@ -1,4 +1,4 @@
-import type { ProfileStats, CandidateProfile } from "../../../types/dashboard";
+import type { ProfileStats, CandidateProfile } from "../../types/dashboard";
 
 
 interface DashboardOverviewProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Profile } from "../../../types/profile";
+import { Profile } from "../../types/profile";
 import { profileService } from "@/lib/profileService";
 import Image from "next/image";
 import Link from "next/link";

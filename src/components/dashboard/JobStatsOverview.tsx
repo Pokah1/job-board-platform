@@ -1,5 +1,5 @@
 // components/dashboard/JobStatsOverview.tsx
-import type { JobStats } from "../../../types/dashboard";
+import type { JobStats } from "../../types/dashboard";
 
 
 interface JobStatsOverviewProps {

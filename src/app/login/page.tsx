@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import type { LoginFormData } from "../../../types/auth";
+import type { LoginFormData } from "../../types/auth";
 
 
 const LoginPage = () => {
@@ -115,7 +115,7 @@ const LoginPage = () => {
             <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <Link
-                href="/auth/register"
+                href="/register"
                 className="text-primary hover:text-primary/80 font-medium hover:underline"
               >
                 Create one here

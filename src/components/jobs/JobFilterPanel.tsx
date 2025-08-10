@@ -5,8 +5,8 @@ import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { useJobs } from "@/context/JobsContext"
 import { EXPERIENCE_LEVELS } from "@/lib/job-utils"
-import type { Filters } from "../../../types/filter"
-import type { Category } from "../../../types/jobs"
+import type { Filters } from "../../types/filter"
+import type { Category } from "../../types/jobs"
 import { Search, X } from "lucide-react"
 
 interface JobFilterPanelProps {

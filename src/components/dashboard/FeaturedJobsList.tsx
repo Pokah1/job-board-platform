@@ -1,4 +1,4 @@
-import type { FeaturedJob } from "../../../types/dashboard";
+import type { FeaturedJob } from "../../types/dashboard";
 
 interface FeaturedJobsListProps {
   jobs: FeaturedJob[];

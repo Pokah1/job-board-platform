@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Profile, ProfileFilters } from '../../types/profile';
+import { Profile, ProfileFilters } from '../types/profile';
 
 interface PaginationData {
   count: number;

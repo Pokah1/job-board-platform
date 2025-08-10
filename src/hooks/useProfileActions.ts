@@ -3,7 +3,7 @@
 import { useCallback } from "react"
 import { profileService } from "@/lib/profileService"
 import { useProfile } from "@/context/ProfileContext"
-import { ProfileFilters, CreateProfilePayload, UpdateProfilePayload } from "../../types/profile"
+import { ProfileFilters, CreateProfilePayload, UpdateProfilePayload } from "../types/profile"
 
 export function useProfileActions() {
   const { dispatch } = useProfile();

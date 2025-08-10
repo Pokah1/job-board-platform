@@ -3,8 +3,8 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
 import api from "@/lib/api"
-import type { Job } from "../../../types/jobs"
-import type { JobApplication } from "../../../types/applications"
+import type { Job } from "../../types/jobs"
+import type { JobApplication } from "../../types/applications"
 import {
   MapPin,
   Briefcase,

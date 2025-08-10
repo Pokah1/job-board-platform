@@ -1,6 +1,6 @@
 "use client";
 
-import { Profile } from "../../../types/profile";
+import { Profile } from "../../types/profile";
 import Image from "next/image";
 import Link from "next/link";
 import { SquarePen, Trash2 } from 'lucide-react';

@@ -7,7 +7,7 @@ import {
   ProfileStats,
   MyProfileStats,
   ProfileFilters,
-} from "../../types/profile";
+} from "../types/profile";
 
 // Define a custom error type for handled errors
 interface HandledError extends Error {
@@ -46,7 +46,7 @@ export const profileService = {
   // Fetch available candidates
   getAvailableCandidates: async (filters?: ProfileFilters) => {
     try {
-      console.log('Fetching available candidates with filters:', filters);
+      
       const response = await api.get<PaginatedProfiles>("/account/profiles/available_candidates/", { 
         params: filters 
       });
